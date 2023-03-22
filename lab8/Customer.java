@@ -1,61 +1,32 @@
-public class Cashier {
-    
-    private Queue<Customer> queue;
-    private Customer currentCustomer;
-    private int totalCustomerWaitTime;
-    private int totalItemsServed;
-    private int totalCustomersServed;
-    
-    public Cashier() {
-        queue = new ArrayQueue<Customer>();
-        currentCustomer = null;
-        totalCustomerWaitTime = 0;
-        totalItemsServed = 0;
-        totalCustomersServed = 0;
-    }
+import java.util.Random;
 
-    public void addCustomer(Customer c){
-        queue.enqueue(c);
-    }
+public class Customer {
     
-    public int getQueueSize(){
-        return queue.size();
-    }
+        private int arrivalTime;
+        private int initialnumberOfItems;
+        private int numberOfItems;
+        private int MAX_NUM_ITEMS = 25;
 
-    public void serveCustomers(int currentTime){
-        if (currentCustomer == null) {
-            if (!queue.isEmpty()) {
-                currentCustomer = queue.dequeue();
-                totalCustomerWaitTime += currentTime - currentCustomer.getArrivalTime();
-            }
+        public Customer(int arrivalTime) {
+            this.arrivalTime = arrivalTime;
+            Random random = new Random();
+            initialnumberOfItems = random.nextInt(MAX_NUM_ITEMS-1) + 1;
+            numberOfItems = initialnumberOfItems;
         }
-        if (currentCustomer != null) {
-            currentCustomer.serve();
-            if (currentCustomer.getNumberOfItems() == 0) {
-                totalItemsServed += currentCustomer.getNumberOfServedItems();
-                totalCustomersServed++;
-                currentCustomer = null;
-            }
+    
+        public int getArrivalTime() {
+            return arrivalTime;
         }
-    }
     
-    public int getTotalCustomerWaitTime() {
-        return totalCustomerWaitTime;
-    }
+        public int getNumberOfItems() {
+            return numberOfItems;
+        }
     
-    public int getTotalItemsServed() {
-        return totalItemsServed;
-    }
+        public int getNumberOfServedItems() {
+            return initialnumberOfItems - numberOfItems;
+        }
     
-    public int getTotalCustomersServed() {
-        return totalCustomersServed;
-    }
-
-    public String toString() {
-        String info = "";
-        info += "The total number of customers served is " + totalCustomersServed + "\n";
-        info += "The average number of items per customer was " + (totalItemsServed / totalCustomersServed) + "\n";
-        info += "The average waiting time (in seconds) was " + (totalCustomerWaitTime / totalCustomersServed) + "\n";
-        return info;
-    }
+        public void serve() {
+            numberOfItems--;
+        }
 }
